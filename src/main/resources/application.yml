@@ -1,0 +1,10 @@
+#server:
+#  port: 8080
+#
+#data:
+#  mongodb:
+#    uri: mongodb://localhost:27018/netflux
+#    database: netflux
+#    port: 27018  # embedded test purpose
+#    repositories:
+#      type: reactive

@@ -14,8 +14,17 @@ configurations {
 	}
 }
 
+bootJar {
+	archiveFileName.set("netflux.jar")
+	enabled = true
+}
+
 repositories {
 	mavenCentral()
+}
+
+ext {
+	set('testcontainersVersion', "1.17.6")
 }
 
 dependencies {
@@ -24,8 +33,22 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'de.flapdoodle.embed:de.flapdoodle.embed.mongo'
 	testImplementation 'io.projectreactor:reactor-test'
+	testImplementation 'org.testcontainers:junit-jupiter'
+	testImplementation 'org.testcontainers:mongodb'
+
+	// Only on Apple Silicon:
+	// ref: https://github.com/netty/netty/issues/11020
+	if (System.getProperty("os.arch", "") == "aarch64") {
+		runtimeOnly("io.netty:netty-resolver-dns-native-macos:4.1.79.Final:osx-aarch_64")
+	}
+
+}
+
+dependencyManagement {
+	imports {
+		mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+	}
 }
 
 tasks.named('test') {
